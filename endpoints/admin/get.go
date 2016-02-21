@@ -23,9 +23,26 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 
 func GetManageSections(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
+		head := make([]domain.Section, 1, 1)
+		
+		for i := len(sections) - 1; i >= 0; i-- {
+			section := sections[i]
+			
+			if section.Name == "Head" {
+				head[0] = section
+				sections = append(sections[:i], sections[i+1:]...)
+				break
+			}
+		}
+		
+		model := make(map[string][]domain.Section)
+	
+		model["Head"] = head
+		model["Sections"] = sections
+	
 		pageModel := domain.AdminPage{
-			Name:  "manage-sections",
-			Model: sections,
+			Name:	"manage-sections",
+			Model:	model,
 		}
 
 		loadAdminTemplate(w, pageModel)

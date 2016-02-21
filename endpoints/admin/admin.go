@@ -28,7 +28,10 @@ func loadAdminTemplate(w http.ResponseWriter, adminPage domain.AdminPage) {
 
 	cacheAdminTemplates()
 
-	if err := adminTemplates[adminPage.Name].ExecuteTemplate(w, "layout", adminPage.Model); err != nil {
+	err := adminTemplates[adminPage.Name].ExecuteTemplate(w, "layout", adminPage.Model)
+	
+	if err != nil {
+		log.Println("error? " + err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

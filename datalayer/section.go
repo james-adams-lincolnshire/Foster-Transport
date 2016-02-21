@@ -10,7 +10,7 @@ import (
 
 func GetSections(r *http.Request) ([]domain.Section, error) {
 	context := appengine.NewContext(r)
-	sections := make([]domain.Section, 0, 10)
+	sections := make([]domain.Section, 0, 100)
 	query := datastore.NewQuery("Section").Order("Order")
 
 	log.Println("log: Executing datastore query for Sections...")
