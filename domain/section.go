@@ -14,6 +14,6 @@ type Section struct {
 	Hidden		bool
 	Created	time.Time
 	Html			template.HTML	`datastore:",noindex"`
-	Css			string				`datastore:",noindex"`
-	Javascript	string				`datastore:",noindex"`
+	Css			string	`datastore:",noindex"`
+	Javascript	string	`datastore:",noindex"`
 }

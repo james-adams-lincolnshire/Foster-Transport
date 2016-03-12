@@ -6,10 +6,14 @@ import (
 	"time"
 	"fostertransport/domain"
 	"bytes"
+	"html/template"
+	"log"
 	"github.com/tdewolff/minify"
 	"github.com/tdewolff/minify/css"
     "github.com/tdewolff/minify/js"
 )
+
+var contentTemplates = make(map[string]*template.Template)
 
 func SetCacheHeaders(w http.ResponseWriter, r *http.Request, contentType string) {
 	dateTime := time.Now()
@@ -43,4 +47,42 @@ func MergeAndMinify(contentType string, sections []domain.Section) (string, erro
 	}
 	
 	return minifier.String(contentType, buffer.String())
+}
+
+func loadAdhoctemplate(w http.ResponseWriter, adhocTemplate string, sections []domain.Section) {
+	log.Println("log: Executing template, adhoc...")
+
+	parsedTemplate, err := template.New("adhoc").Parse(adhocTemplate)
+
+	if err == nil {
+		if err := parsedTemplate.Execute(w, sections); err == nil {
+			return
+		}
+	}
+
+	http.Error(w, err.Error(), http.StatusInternalServerError)
+}
+
+func loadContentTemplate(w http.ResponseWriter, adminPage domain.AdminPage) {
+	log.Println("log: Executing template, content...")
+
+	cacheContentTemplates()
+
+	err := contentTemplates[adminPage.Name].ExecuteTemplate(w, "layout", adminPage.Model)
+	
+	if err != nil {
+		log.Println("error? " + err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func cacheContentTemplates() {
+	if len(contentTemplates) > 0 {
+		return
+	}
+
+	contentTemplates["content-layout"] = template.Must(template.ParseFiles(
+		"views/admin/contentLayout.html",
+	))
 }

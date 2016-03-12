@@ -57,7 +57,7 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 		section.Hidden = hidden
 	}
 
-	section.Name = r.FormValue("name")
+	section.Name = r.FormValue("sectionName")
 	section.Html = template.HTML(r.FormValue("html"))
 	section.Css = r.FormValue("css")
 	section.Javascript = r.FormValue("javascript")
