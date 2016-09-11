@@ -3,7 +3,6 @@ package admin
 import (
 	"fostertransport/datalayer"
 	"fostertransport/domain"
-	"html/template"
 	"net/http"
 	"strconv"
 	"time"
@@ -58,7 +57,7 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 	}
 
 	section.Name = r.FormValue("sectionName")
-	section.Html = template.HTML(r.FormValue("html"))
+	section.Html = r.FormValue("html")
 	section.Css = r.FormValue("css")
 	section.Javascript = r.FormValue("javascript")
 

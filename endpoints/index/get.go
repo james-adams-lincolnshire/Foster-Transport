@@ -13,14 +13,20 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	if sections, err := datalayer.GetSections(r); err == nil {
-		pageModel := domain.Page{
-			Name:  "root",
-			Model: sections,
-		}
-
-		loadTemplate(w, pageModel)
-	} else {
+	sections, err := datalayer.GetSections(r)
+	if  err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	
+	minifiedSections, err := MergeAndMinifyHtml(sections)
+	if  err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	
+	pageModel := domain.Page{
+		Name:  "root",
+		Model: minifiedSections,
+	}
+
+	loadTemplate(w, pageModel)
 }

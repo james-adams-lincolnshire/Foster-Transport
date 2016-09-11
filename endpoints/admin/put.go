@@ -2,7 +2,6 @@ package admin
 
 import (
 	"fostertransport/datalayer"
-	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -27,7 +26,7 @@ func PutEditSection(w http.ResponseWriter, r *http.Request) {
 	section.Name = r.FormValue("sectionName")
 	section.Order = order
 	section.Hidden = hidden
-	section.Html = template.HTML(r.FormValue("html"))
+	section.Html = r.FormValue("html")
 	section.Css = r.FormValue("css")
 	section.Javascript = r.FormValue("javascript")
 

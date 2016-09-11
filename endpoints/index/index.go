@@ -6,7 +6,10 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"bytes"
 	"github.com/gorilla/securecookie"
+	"github.com/tdewolff/minify"
+	"github.com/tdewolff/minify/html"
 )
 
 var templates = make(map[string]*template.Template)
@@ -108,4 +111,33 @@ func getCookie(w http.ResponseWriter, r *http.Request, cookieName string) (strin
     }
 	
 	return value, err
+}
+
+func MergeAndMinifyHtml(sections []domain.Section) ([]struct {
+		Name string
+		Html template.HTML
+	}, error) {
+	
+	var err error
+	processedSections := make([]struct {
+		Name string
+		Html template.HTML
+	}, len(sections), len(sections))
+
+	for i := 0; i < len(sections); i++ {
+		minifier := minify.New()
+		minifier.AddFunc("text/html", html.Minify)
+		
+		var buffer bytes.Buffer
+		buffer.WriteString(sections[i].Html)
+		
+		minifiedHtmlString, err := minifier.String("text/html", buffer.String())
+		
+		if (err == nil) {
+			processedSections[i].Name = sections[i].Name
+			processedSections[i].Html = template.HTML(minifiedHtmlString)
+		}
+	}
+	
+	return processedSections, err
 }

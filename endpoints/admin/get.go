@@ -3,6 +3,7 @@ package admin
 import (
 	"fostertransport/datalayer"
 	"fostertransport/domain"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -23,22 +24,37 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 
 func GetManageSections(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
-		head := make([]domain.Section, 1, 1)
+		head := make([]struct {
+			Id int64
+			Html template.HTML
+		}, 1, 1)
+		htmlSections := make([]struct {
+			Id int64
+			Html template.HTML
+		}, len(sections) - 1, len(sections) - 1)
 		
-		for i := len(sections) - 1; i >= 0; i-- {
+		htmlIndex := 0
+		
+		for i := 0; i < len(sections); i++ {
 			section := sections[i]
 			
 			if section.Name == "Head" {
-				head[0] = section
-				sections = append(sections[:i], sections[i+1:]...)
-				break
+				head[0].Id = section.Id
+				head[0].Html = template.HTML(section.Html)
+			} else {
+				htmlSections[htmlIndex].Id = section.Id
+				htmlSections[htmlIndex].Html = template.HTML(section.Html)
+				htmlIndex++
 			}
 		}
 		
-		model := make(map[string][]domain.Section)
+		model := make(map[string][]struct {
+			Id int64
+			Html template.HTML
+		})
 	
 		model["Head"] = head
-		model["Sections"] = sections
+		model["Sections"] = htmlSections
 	
 		pageModel := domain.AdminPage{
 			Name:	"manage-sections",
