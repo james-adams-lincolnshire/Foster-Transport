@@ -24,6 +24,11 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 
 func GetManageSections(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
+		if len(sections) == 0 {
+			http.Redirect(w, r, "/admin/manage/sections/create", 307)
+			return
+		}
+	
 		head := make([]struct {
 			Id int64
 			Html template.HTML
