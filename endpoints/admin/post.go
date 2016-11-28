@@ -4,7 +4,9 @@ import (
 	"fostertransport/datalayer"
 	"fostertransport/domain"
 	"net/http"
+	"net/url"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -17,14 +19,9 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	order, err := strconv.Atoi(r.FormValue("displayOrder"))
+	order, _ := strconv.Atoi(r.FormValue("displayOrder"))
 	hidden := convertCheckbox(r.FormValue("hidden"))
 	deleted := convertCheckbox(r.FormValue("deleted"))
-
-	if err != nil && editing {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 
 	var section = domain.Section{
 		Order:   -1,
@@ -52,14 +49,21 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 
 		section = editableSection
 		
-		section.Order = order
-		section.Hidden = hidden
+		if _, exists := r.Form["displayOrder"]; exists { section.Order = order }
+		if _, exists := r.Form["hidden"]; exists { section.Hidden = hidden }
 	}
 
-	section.Name = r.FormValue("sectionName")
-	section.Html = r.FormValue("html")
-	section.Css = r.FormValue("css")
-	section.Javascript = r.FormValue("javascript")
+	if _, exists := r.Form["sectionName"]; exists { section.Name = r.FormValue("sectionName") }
+	if _, exists := r.Form["html"]; exists { 
+		if htmlVal, err := url.QueryUnescape(r.FormValue("html")); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		} else {
+			section.Html = strings.TrimSpace(htmlVal)
+		}
+	}
+	if _, exists := r.Form["css"]; exists { section.Css = r.FormValue("css") }
+	if _, exists := r.Form["javascript"]; exists { section.Javascript = r.FormValue("javascript")}
 
 	if editing {
 		if err := datalayer.EditSection(r, id, &section); err != nil {
