@@ -37,8 +37,12 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 			Id int64
 			Html template.HTML
 		}, len(sections) - 1, len(sections) - 1)
+		deferredContent := make([]struct {
+			Id int64
+			Html template.HTML
+		}, 1, 1)
 		
-		htmlIndex := 0
+		htmlSectionsIndex := 0
 		
 		for i := 0; i < len(sections); i++ {
 			section := sections[i]
@@ -46,10 +50,13 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 			if section.Name == "Head" {
 				head[0].Id = section.Id
 				head[0].Html = template.HTML(section.Html)
+			} else if  section.Name == "Deferred Content" {
+				deferredContent[0].Id = section.Id
+				deferredContent[0].Html = template.HTML(section.Html)
 			} else {
-				htmlSections[htmlIndex].Id = section.Id
-				htmlSections[htmlIndex].Html = template.HTML(section.Html)
-				htmlIndex++
+				htmlSections[htmlSectionsIndex].Id = section.Id
+				htmlSections[htmlSectionsIndex].Html = template.HTML(section.Html)
+				htmlSectionsIndex++
 			}
 		}
 		
@@ -60,6 +67,7 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 	
 		model["Head"] = head
 		model["Sections"] = htmlSections
+		model["DeferredContent"] = deferredContent
 	
 		pageModel := domain.AdminPage{
 			Name:	"manage-sections",

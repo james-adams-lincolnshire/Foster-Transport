@@ -8,7 +8,7 @@ import (
 
 func PutEditSection(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(r.FormValue("id"), 10, 64)
-	order, err := strconv.Atoi(r.FormValue("order"))
+	order, err := strconv.Atoi(r.FormValue("displayOrder"))
 	hidden := convertCheckbox(r.FormValue("hidden"))
 
 	if err != nil {

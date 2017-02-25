@@ -50,7 +50,7 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 		section = editableSection
 		
 		if _, exists := r.Form["displayOrder"]; exists { section.Order = order }
-		if _, exists := r.Form["hidden"]; exists { section.Hidden = hidden }
+		section.Hidden = hidden
 	}
 
 	if _, exists := r.Form["sectionName"]; exists { section.Name = r.FormValue("sectionName") }
