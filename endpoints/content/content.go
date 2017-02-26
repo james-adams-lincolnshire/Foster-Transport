@@ -34,7 +34,9 @@ func MergeAndMinify(contentType string, sections []domain.Section) (string, erro
 		minifier.AddFunc(contentType, css.Minify)
 	
 		for i := 0; i < len(sections); i++ {
-			buffer.WriteString(sections[i].Css)
+			if (i > 2) {
+				buffer.WriteString(sections[i].Css)
+			}
 		}
 	}
 	

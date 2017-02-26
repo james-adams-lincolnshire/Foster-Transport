@@ -28,8 +28,8 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	
-	// Optimize HTML
-	minifiedSections, err := MergeAndMinifyHtml(sections)
+	// Optimize HTML and Critical CSS
+	minifiedSections, err := MergeAndMinifyHtmlAndCss(sections)
 	if  err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

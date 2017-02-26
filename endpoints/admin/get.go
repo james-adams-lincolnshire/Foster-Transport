@@ -32,14 +32,17 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 		head := make([]struct {
 			Id int64
 			Html template.HTML
+			Css template.CSS
 		}, 1, 1)
 		htmlSections := make([]struct {
 			Id int64
 			Html template.HTML
+			Css template.CSS
 		}, len(sections) - 1, len(sections) - 1)
 		deferredContent := make([]struct {
 			Id int64
 			Html template.HTML
+			Css template.CSS
 		}, 1, 1)
 		
 		htmlSectionsIndex := 0
@@ -50,12 +53,15 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 			if section.Name == "Head" {
 				head[0].Id = section.Id
 				head[0].Html = template.HTML(section.Html)
+				head[0].Css = template.CSS(section.Css)
 			} else if  section.Name == "Deferred Content" {
 				deferredContent[0].Id = section.Id
 				deferredContent[0].Html = template.HTML(section.Html)
+				deferredContent[0].Css = template.CSS(section.Css)
 			} else {
 				htmlSections[htmlSectionsIndex].Id = section.Id
 				htmlSections[htmlSectionsIndex].Html = template.HTML(section.Html)
+				htmlSections[htmlSectionsIndex].Css = template.CSS(section.Css)
 				htmlSectionsIndex++
 			}
 		}
@@ -63,6 +69,7 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 		model := make(map[string][]struct {
 			Id int64
 			Html template.HTML
+			Css template.CSS
 		})
 	
 		model["Head"] = head

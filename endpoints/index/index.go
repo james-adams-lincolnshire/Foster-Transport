@@ -7,9 +7,11 @@ import (
 	"log"
 	"net/http"
 	"bytes"
+	"strconv"
 	"github.com/gorilla/securecookie"
 	"github.com/tdewolff/minify"
 	"github.com/tdewolff/minify/html"
+	"github.com/tdewolff/minify/css"
 )
 
 var templates = make(map[string]*template.Template)
@@ -113,29 +115,43 @@ func getCookie(w http.ResponseWriter, r *http.Request, cookieName string) (strin
 	return value, err
 }
 
-func MergeAndMinifyHtml(sections []domain.Section) ([]struct {
+func MergeAndMinifyHtmlAndCss(sections []domain.Section) ([]struct {
 		Name string
 		Html template.HTML
+		Css template.CSS
 	}, error) {
 	
 	var err error
 	processedSections := make([]struct {
 		Name string
 		Html template.HTML
+		Css template.CSS
 	}, len(sections), len(sections))
 
 	for i := 0; i < len(sections); i++ {
-		minifier := minify.New()
-		minifier.AddFunc("text/html", html.Minify)
+		htmlMinifier := minify.New()
+		cssMinifier := minify.New()
+		htmlMinifier.AddFunc("text/html", html.Minify)
+		cssMinifier.AddFunc("text/css", css.Minify)
 		
-		var buffer bytes.Buffer
-		buffer.WriteString(sections[i].Html)
+		var htmlBuffer bytes.Buffer
+		htmlBuffer.WriteString(sections[i].Html)
+		minifiedHtmlString, err := htmlMinifier.String("text/html", htmlBuffer.String())
 		
-		minifiedHtmlString, err := minifier.String("text/html", buffer.String())
+		minifiedCssString := ""
+		
+		if (i < 3) {
+			var cssBuffer bytes.Buffer
+			cssBuffer.WriteString(sections[i].Css)
+			minifiedCssString, err = cssMinifier.String("text/css", cssBuffer.String())
+		}
 		
 		if (err == nil) {
 			processedSections[i].Name = sections[i].Name
 			processedSections[i].Html = template.HTML(minifiedHtmlString)
+			processedSections[i].Css = template.CSS(minifiedCssString)
+			
+			log.Println("log:" + strconv.Itoa(i) + " Minified css: " + minifiedCssString)
 		}
 	}
 	
