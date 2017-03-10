@@ -22,10 +22,12 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 	order, _ := strconv.Atoi(r.FormValue("displayOrder"))
 	hidden := convertCheckbox(r.FormValue("hidden"))
 	deleted := convertCheckbox(r.FormValue("deleted"))
+	aboveTheFold := convertCheckbox(r.FormValue("aboveTheFold"))
 
 	var section = domain.Section{
 		Order:   -1,
 		Hidden:  true,
+		AboveTheFold: false,
 		Created: time.Now(),
 	}
 
@@ -51,6 +53,7 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 		
 		if _, exists := r.Form["displayOrder"]; exists { section.Order = order }
 		section.Hidden = hidden
+		section.AboveTheFold = aboveTheFold
 	}
 
 	if _, exists := r.Form["sectionName"]; exists { section.Name = r.FormValue("sectionName") }

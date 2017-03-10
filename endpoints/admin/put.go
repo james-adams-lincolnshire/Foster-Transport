@@ -10,6 +10,7 @@ func PutEditSection(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(r.FormValue("id"), 10, 64)
 	order, err := strconv.Atoi(r.FormValue("displayOrder"))
 	hidden := convertCheckbox(r.FormValue("hidden"))
+	aboveTheFold := convertCheckbox(r.FormValue("aboveTheFold"))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -26,6 +27,7 @@ func PutEditSection(w http.ResponseWriter, r *http.Request) {
 	section.Name = r.FormValue("sectionName")
 	section.Order = order
 	section.Hidden = hidden
+	section.AboveTheFold = aboveTheFold
 	section.Html = r.FormValue("html")
 	section.Css = r.FormValue("css")
 	section.Javascript = r.FormValue("javascript")

@@ -77,7 +77,6 @@ func DeleteSection(r *http.Request, id int64) error {
 }
 
 func newSectionKey(c appengine.Context) *datastore.Key {
-	// The string "default_sections" here could be varied to have multiple guestbooks.
 	return datastore.NewKey(c, "Section", "", 0, nil)
 }
 

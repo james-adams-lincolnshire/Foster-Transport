@@ -140,7 +140,7 @@ func MergeAndMinifyHtmlAndCss(sections []domain.Section) ([]struct {
 		
 		minifiedCssString := ""
 		
-		if (i < 3) {
+		if (sections[i].AboveTheFold) {
 			var cssBuffer bytes.Buffer
 			cssBuffer.WriteString(sections[i].Css)
 			minifiedCssString, err = cssMinifier.String("text/css", cssBuffer.String())

@@ -13,6 +13,7 @@ func Start() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", index.GetIndex).Methods("GET")
+	router.HandleFunc("/our-services", index.GetIndex).Methods("GET")
 
 	router.HandleFunc("/content/css/site.css", content.GetCss).Methods("GET")
 	router.HandleFunc("/content/javascript/site.js", content.GetJavascript).Methods("GET")

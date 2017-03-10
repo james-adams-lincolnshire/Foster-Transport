@@ -11,6 +11,7 @@ type Section struct {
 	Name			string
 	Order			int
 	Hidden			bool
+	AboveTheFold bool
 	Created		time.Time
 	Html				string	`datastore:",noindex"`
 	Css				string	`datastore:",noindex"`
