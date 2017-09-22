@@ -19,16 +19,16 @@ func Start() {
 	router.HandleFunc("/content/javascript/site.js", content.GetJavascript).Methods("GET")
 
 	router.HandleFunc("/admin/dashboard", admin.GetDashboard).Methods("GET")
-	router.HandleFunc("/admin/quote/chats", admin.GetLiveChats).Methods("GET")
-	router.HandleFunc("/admin/quote/requests", admin.GetQuoteRequests).Methods("GET")
-	router.HandleFunc("/admin/manage/sections", admin.GetManageSections).Methods("GET")
-	router.HandleFunc("/admin/manage/sections/create", admin.GetCreateSection).Methods("GET")
-	router.HandleFunc("/admin/manage/sections/edit", admin.GetEditSection).Methods("GET")
-	router.HandleFunc("/admin/manage/blog", admin.GetManageBlog).Methods("GET")
-	router.HandleFunc("/admin/manage/blog/create", admin.GetCreateBlog).Methods("GET")
+	router.HandleFunc("/admin/chats", admin.GetLiveChats).Methods("GET")
+	router.HandleFunc("/admin/quotes", admin.GetQuoteRequests).Methods("GET")
+	router.HandleFunc("/admin/sections", admin.GetManageSections).Methods("GET")
+	router.HandleFunc("/admin/sections/create", admin.GetCreateSection).Methods("GET")
+	router.HandleFunc("/admin/sections/edit", admin.GetEditSection).Methods("GET")
+	router.HandleFunc("/admin/blog", admin.GetManageBlog).Methods("GET")
+	router.HandleFunc("/admin/blog/create", admin.GetCreateBlog).Methods("GET")
 
-	router.HandleFunc("/admin/manage/sections", admin.PostSaveSection).Methods("POST")
-	router.HandleFunc("/admin/manage/blog", admin.PostSaveBlog).Methods("POST")
+	router.HandleFunc("/admin/sections", admin.PostSaveSection).Methods("POST")
+	router.HandleFunc("/admin/blog", admin.PostSaveBlog).Methods("POST")
 
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 

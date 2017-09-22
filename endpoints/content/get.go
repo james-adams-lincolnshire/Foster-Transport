@@ -19,9 +19,15 @@ func GetCss(w http.ResponseWriter, r *http.Request) {
 		templateCss := template.HTML(minifiedCss)
 		
 		if err == nil {
-			pageModel := domain.AdminPage{
+			pageModel := domain.AdminPage {
 				Name:  "content-layout",
-				Model: templateCss,
+				Model: domain.PageModel {
+					Model: templateCss,
+					Menu: domain.Menu {
+						CurrentLocation: "content-layout",
+						Sections: sections,
+					},
+				},
 			}
 
 			loadContentTemplate(w, pageModel)
@@ -43,9 +49,15 @@ func GetJavascript(w http.ResponseWriter, r *http.Request) {
 		templateJavascript := template.HTML(minifiedJavascript)
 		
 		if err == nil {
-			pageModel := domain.AdminPage{
+			pageModel := domain.AdminPage {
 				Name:  "content-layout",
-				Model: templateJavascript,
+				Model: domain.PageModel {
+					Model: templateJavascript,
+					Menu: domain.Menu {
+						CurrentLocation: "content-layout",
+						Sections: sections,
+					},
+				},
 			}
 
 			loadContentTemplate(w, pageModel)

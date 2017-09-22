@@ -38,7 +38,7 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			
-			http.Redirect(w, r, "/admin/manage/sections", 302)
+			http.Redirect(w, r, "/admin/sections", 302)
 			return
 		}
 	
@@ -80,14 +80,20 @@ func PostSaveSection(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, "/admin/manage/sections", 302)
+	http.Redirect(w, r, "/admin/sections", 302)
 }
 
 func PostSaveBlog(w http.ResponseWriter, r *http.Request) {
-	if sections, err := datalayer.GetSections(r); err == nil {
-		pageModel := domain.AdminPage{
+	if sections, err := datalayer.GetSections(r); err == nil {		
+		pageModel := domain.AdminPage {
 			Name:  "manage-blog",
-			Model: sections,
+			Model: domain.PageModel {
+				Model: sections,
+				Menu: domain.Menu {
+					CurrentLocation: "manage-blog",
+					Sections: sections,
+				},
+			},
 		}
 
 		loadAdminTemplate(w, pageModel)

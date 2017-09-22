@@ -10,10 +10,16 @@ import (
 )
 
 func GetDashboard(w http.ResponseWriter, r *http.Request) {
-	if sections, err := datalayer.GetSections(r); err == nil {
+	if sections, err := datalayer.GetSections(r); err == nil {		
 		pageModel := domain.AdminPage{
 			Name:  "dashboard",
-			Model: sections,
+			Model: domain.PageModel{
+				Model: sections,
+				Menu: domain.Menu{
+					CurrentLocation: "dashboard",
+					Sections: sections,
+				},
+			},
 		}
 
 		loadAdminTemplate(w, pageModel)
@@ -25,7 +31,7 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 func GetManageSections(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
 		if len(sections) == 0 {
-			http.Redirect(w, r, "/admin/manage/sections/create", 307)
+			http.Redirect(w, r, "/admin/sections/create", 307)
 			return
 		}
 	
@@ -38,7 +44,7 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 			Id int64
 			Html template.HTML
 			Css template.CSS
-		}, len(sections) - 1, len(sections) - 1)
+		}, len(sections) - 2, len(sections) - 2)
 		deferredContent := make([]struct {
 			Id int64
 			Html template.HTML
@@ -75,10 +81,16 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 		model["Head"] = head
 		model["Sections"] = htmlSections
 		model["DeferredContent"] = deferredContent
-	
+		
 		pageModel := domain.AdminPage{
-			Name:	"manage-sections",
-			Model:	model,
+			Name:  "manage-sections",
+			Model: domain.PageModel{
+				Model: model,
+				Menu: domain.Menu{
+					CurrentLocation: "manage-sections",
+					Sections: sections,
+				},
+			},
 		}
 
 		loadAdminTemplate(w, pageModel)
@@ -89,9 +101,15 @@ func GetManageSections(w http.ResponseWriter, r *http.Request) {
 
 func GetCreateSection(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
-		pageModel := domain.AdminPage{
+		pageModel := domain.AdminPage {
 			Name:  "create-section",
-			Model: sections,
+			Model: domain.PageModel {
+				Model: sections,
+				Menu: domain.Menu {
+					CurrentLocation: "create-section",
+					Sections: sections,
+				},
+			},
 		}
 
 		loadAdminTemplate(w, pageModel)
@@ -111,15 +129,22 @@ func GetEditSection(w http.ResponseWriter, r *http.Request) {
 	}
 
 	section, err := datalayer.GetSection(r, id)
+	sections, err := datalayer.GetSections(r)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	pageModel := domain.AdminPage{
+	
+	pageModel := domain.AdminPage {
 		Name:  "edit-section",
-		Model: section,
+		Model: domain.PageModel {
+			Model: section,
+			Menu: domain.Menu {
+				CurrentLocation: "edit-section",
+				Sections: sections,
+			},
+		},
 	}
 
 	loadAdminTemplate(w, pageModel)
@@ -127,9 +152,15 @@ func GetEditSection(w http.ResponseWriter, r *http.Request) {
 
 func GetManageBlog(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
-		pageModel := domain.AdminPage{
+		pageModel := domain.AdminPage {
 			Name:  "manage-blog",
-			Model: sections,
+			Model: domain.PageModel {
+				Model: sections,
+				Menu: domain.Menu {
+					CurrentLocation: "manage-blog",
+					Sections: sections,
+				},
+			},
 		}
 
 		loadAdminTemplate(w, pageModel)
@@ -140,9 +171,15 @@ func GetManageBlog(w http.ResponseWriter, r *http.Request) {
 
 func GetCreateBlog(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
-		pageModel := domain.AdminPage{
+		pageModel := domain.AdminPage {
 			Name:  "create-blog",
-			Model: sections,
+			Model: domain.PageModel {
+				Model: sections,
+				Menu: domain.Menu {
+					CurrentLocation: "create-blog",
+					Sections: sections,
+				},
+			},
 		}
 
 		loadAdminTemplate(w, pageModel)
@@ -153,9 +190,15 @@ func GetCreateBlog(w http.ResponseWriter, r *http.Request) {
 
 func GetLiveChats(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
-		pageModel := domain.AdminPage{
+		pageModel := domain.AdminPage {
 			Name:  "live-chats",
-			Model: sections,
+			Model: domain.PageModel {
+				Model: sections,
+				Menu: domain.Menu {
+					CurrentLocation: "live-chats",
+					Sections: sections,
+				},
+			},
 		}
 
 		loadAdminTemplate(w, pageModel)
@@ -166,9 +209,15 @@ func GetLiveChats(w http.ResponseWriter, r *http.Request) {
 
 func GetQuoteRequests(w http.ResponseWriter, r *http.Request) {
 	if sections, err := datalayer.GetSections(r); err == nil {
-		pageModel := domain.AdminPage{
+		pageModel := domain.AdminPage {
 			Name:  "quote-requests",
-			Model: sections,
+			Model: domain.PageModel {
+				Model: sections,
+				Menu: domain.Menu {
+					CurrentLocation: "quote-requests",
+					Sections: sections,
+				},
+			},
 		}
 
 		loadAdminTemplate(w, pageModel)
